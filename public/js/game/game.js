@@ -1,5 +1,6 @@
 var config = {
     type: Phaser.AUTO,
+    antialias: false,
     width: 800,
     height: 600,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -18,29 +19,23 @@ var config = {
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.setBaseURL('http://labs.phaser.io');
-
-    this.load.image('sky', 'assets/skies/space3.png');
-    this.load.image('logo', 'assets/sprites/phaser3-logo.png');
-    this.load.image('red', 'assets/particles/red.png');
+    this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
 }
 
 function create() {
-    this.add.image(400, 300, 'sky');
+    const orcLeader = this.physics.add.image(300, 300, 'megaset', '164').setDisplaySize(100, 100);
+    const orcBrown = this.physics.add.image(400, 300, 'megaset', '163').setDisplaySize(100, 100);
+    const orcGreen = this.physics.add.image(500, 300, 'megaset', '162').setDisplaySize(100, 100);
 
-    var particles = this.add.particles('red');
+    orcLeader.setVelocity(100, 200);
+    orcLeader.setBounce(1, 1);
+    orcLeader.setCollideWorldBounds(true);
 
-    var emitter = particles.createEmitter({
-        speed: 100,
-        scale: { start: 1, end: 0 },
-        blendMode: 'ADD'
-    });
+    orcBrown.setVelocity(100, 200);
+    orcBrown.setBounce(1, 1);
+    orcBrown.setCollideWorldBounds(true);
 
-    var logo = this.physics.add.image(400, 100, 'logo');
-
-    logo.setVelocity(100, 200);
-    logo.setBounce(1, 1);
-    logo.setCollideWorldBounds(true);
-
-    emitter.startFollow(logo);
+    orcGreen.setVelocity(100, 200);
+    orcGreen.setBounce(1, 1);
+    orcGreen.setCollideWorldBounds(true);
 }
