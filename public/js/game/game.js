@@ -31,11 +31,11 @@ function create() {
     orcLeader.setBounce(1, 1);
     orcLeader.setCollideWorldBounds(true);
 
-    orcBrown.setVelocity(100, 200);
+    orcBrown.setVelocity(100, 250);
     orcBrown.setBounce(1, 1);
     orcBrown.setCollideWorldBounds(true);
 
-    orcGreen.setVelocity(100, 200);
+    orcGreen.setVelocity(100, 150);
     orcGreen.setBounce(1, 1);
     orcGreen.setCollideWorldBounds(true);
 }
