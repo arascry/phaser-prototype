@@ -41,6 +41,11 @@
                          "name":"link",
                          "type":"int",
                          "value":0
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -59,6 +64,11 @@
                          "name":"link",
                          "type":"int",
                          "value":2
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":false
                         }],
                  "rotation":0,
                  "type":"",
@@ -113,7 +123,8 @@
                          "name":"teleports",
                          "type":"bool",
                          "value":true
-                        }]
+                        }],
+                 "type":"130"
                 }],
          "tilewidth":16
         }, 

@@ -1,11 +1,4 @@
 { "compressionlevel":-1,
- "editorsettings":
-    {
-     "export":
-        {
-         "target":"."
-        }
-    },
  "height":50,
  "infinite":false,
  "layers":[
@@ -31,12 +24,46 @@
                  "height":16,
                  "id":1,
                  "name":"door_1",
+                 "properties":[
+                        {
+                         "name":"link",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"130",
                  "visible":true,
                  "width":16,
                  "x":304.5,
                  "y":130.5
+                }, 
+                {
+                 "gid":131,
+                 "height":16,
+                 "id":2,
+                 "name":"door_2",
+                 "properties":[
+                        {
+                         "name":"link",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":false
+                        }],
+                 "rotation":0,
+                 "type":"130",
+                 "visible":true,
+                 "width":16,
+                 "x":509.5,
+                 "y":261.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -57,7 +84,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":2,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
@@ -96,7 +123,8 @@
                          "name":"teleports",
                          "type":"bool",
                          "value":true
-                        }]
+                        }],
+                 "type":"130"
                 }],
          "tilewidth":16
         }, 
