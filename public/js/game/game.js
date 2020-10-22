@@ -88,10 +88,9 @@ class BaseScene extends Phaser.Scene {
     }
 
     moveRooms(player, portal) {
-        console.log(portal.link);
         if (portal.teleports === true) {
             if (this.scene.getIndex(`DungeonScene-${portal.link}`) === -1) {
-                this.scene.add(`DungeonScene-${portal.link}`, new DungeonScene(portal.link), true);
+                this.scene.add(`DungeonScene-${portal.link}`, new DungeonScene(portal.link), false);
             } else {
                 this.scene.start(`DungeonScene-${portal.link}`);
             }
