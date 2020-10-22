@@ -1,5 +1,5 @@
-class MyScene extends Phaser.Scene {
-    constructor(name = 'MyScene') {
+class BaseScene extends Phaser.Scene {
+    constructor(name = 'BaseScene') {
         super(name);
         this.player;
         this.cursor;
@@ -9,7 +9,7 @@ class MyScene extends Phaser.Scene {
     preload() {
         this.cache.tilemap.remove('map');
         this.load.image('tiles', 'static/img/dungeonWalls.png');
-        this.load.tilemapTiledJSON('map', 'static/img/mapZero.json');
+        this.load.tilemapTiledJSON('map', 'static/img/map-0.json');
         this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('wallset', 'static/img/dungeonWalls.png', { frameWidth: 16, frameHeight: 16 });
     }
@@ -26,12 +26,13 @@ class MyScene extends Phaser.Scene {
         this.portalsLayer = map.getObjectLayer('portals')['objects'];
         this.portalsLayer.forEach(object => {
             let obj = this.portals.create(object.x, object.y, 'wallset', object.type);
-            obj.setOrigin(0);
+            obj.link = object.properties[0].value;
+            obj.teleports = object.properties[1].value;
         });
 
 
         this.player = this.physics.add.image(400, 300, 'megaset', '252');
-        this.physics.add.overlap(this.player, this.portals, this.moveRooms, null, this);
+        this.physics.add.overlap(this.player, this.portals, null, this.moveRooms, this);
 
         const orcLeader = this.physics.add.image(350, 250, 'megaset', '164');
         const orcBrown = this.physics.add.image(325, 250, 'megaset', '163');
@@ -86,26 +87,30 @@ class MyScene extends Phaser.Scene {
         }
     }
 
-    moveRooms() {
-        this.scene.start('DungeonScene');
+    moveRooms(player, portal) {
+        console.log(portal.link);
+        if (portal.teleports === true) {
+            if (this.scene.getIndex(`DungeonScene-${portal.link}`) === -1) {
+                this.scene.add(`DungeonScene-${portal.link}`, new DungeonScene(portal.link), true);
+            } else {
+                this.scene.start(`DungeonScene-${portal.link}`);
+            }
+        }
     }
 }
 
-class DungeonScene extends MyScene {
-    constructor() {
-        super('DungeonScene');
+class DungeonScene extends BaseScene {
+    constructor(num) {
+        super(`DungeonScene-${num}`);
+        this.num = num;
     }
 
     preload() {
         this.cache.tilemap.remove('map');
         this.load.image('tiles', 'static/img/dungeonWalls.png');
-        this.load.tilemapTiledJSON('map', 'static/img/mapOne.json');
+        this.load.tilemapTiledJSON('map', `static/img/map-${this.num}.json`);
         this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('wallset', 'static/img/dungeonWalls.png', { frameWidth: 16, frameHeight: 16 });
-    }
-
-    moveRooms() {
-        this.scene.start('MyScene');
     }
 }
 
@@ -119,7 +124,7 @@ var config = {
     physics: {
         default: 'arcade',
     },
-    scene: [MyScene, DungeonScene]
+    scene: [BaseScene]
 };
 
 var game = new Phaser.Game(config);
