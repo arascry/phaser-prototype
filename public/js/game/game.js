@@ -4,6 +4,7 @@ class BaseScene extends Phaser.Scene {
         this.player;
         this.prevFrame;
         this.cursor;
+        this.pointer;
         this.portals;
         this.portalLayer;
     }
@@ -82,6 +83,7 @@ class BaseScene extends Phaser.Scene {
         this.physics.add.collider(orcGreen, walls);
 
         this.cursors = this.input.keyboard.createCursorKeys();
+        this.pointer = this.input.activePointer;
 
         orcLeader.setVelocity(50, 50);
         orcLeader.setBounce(1, 1);
@@ -100,7 +102,10 @@ class BaseScene extends Phaser.Scene {
 
     update() {
         this.player.setVelocity(0);
-
+        if (this.pointer.isDown) {
+            this.player.setX(this.pointer.x);
+            this.player.setY(this.pointer.y);
+        }
         if (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown) {
             if (this.cursors.down.isDown) {
                 this.player.setVelocityY(100);
