@@ -98,7 +98,6 @@ class BaseScene extends Phaser.Scene {
         orcGreen.setCollideWorldBounds(true);
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels + 100, map.heightInPixels + 100);
-        this.cameras.main.setSize(500, 300);
         this.cameras.main.startFollow(this.player, false, .5, .5);
     }
 
@@ -185,12 +184,14 @@ class DungeonScene extends BaseScene {
 
 var config = {
     type: Phaser.CANVAS,
-    antialias: false,
     pixelArt: true,
-    width: 500,
-    height: 300,
-    zoom: 2,
-    autoCenter: Phaser.Scale.CENTER_BOTH,
+    scale: {
+        parent: 'phaser-game',
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 700,
+        height: 400
+    },
     physics: {
         default: 'arcade',
     },
