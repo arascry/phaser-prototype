@@ -24,7 +24,7 @@ class BaseScene extends Phaser.Scene {
         let walls = map.createStaticLayer('walls', tiles, 0, 0);
 
         walls.setCollisionByProperty({ collides: true });
-
+        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
         this.portals = this.physics.add.staticGroup();
         this.portalsLayer = map.getObjectLayer('portals')['objects'];
         this.portalsLayer.forEach(object => {
@@ -98,17 +98,17 @@ class BaseScene extends Phaser.Scene {
         orcGreen.setCollideWorldBounds(true);
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels + 100, map.heightInPixels + 100);
-	this.cameras.main.setSize(500, 500);
-	this.cameras.main.startFollow(this.player);
+        this.cameras.main.setSize(500, 300);
+        this.cameras.main.startFollow(this.player, false, .5, .5);
     }
 
     update() {
         this.player.setVelocity(0);
         this.input.on('pointerdown', (pointer) => {
             let pointOffset = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
-	    this.player.setX(pointOffset.x);
+            this.player.setX(pointOffset.x);
             this.player.setY(pointOffset.y);
-  	});
+        });
         if (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown) {
             if (this.cursors.down.isDown) {
                 this.player.setVelocityY(100);
@@ -184,10 +184,11 @@ class DungeonScene extends BaseScene {
 }
 
 var config = {
-    type: Phaser.AUTO,
+    type: Phaser.CANVAS,
+    antialias: false,
     pixelArt: true,
     width: 500,
-    height: 500,
+    height: 300,
     zoom: 2,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     physics: {
