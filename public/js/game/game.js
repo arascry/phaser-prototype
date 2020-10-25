@@ -97,15 +97,18 @@ class BaseScene extends Phaser.Scene {
         orcGreen.setBounce(1, 1);
         orcGreen.setCollideWorldBounds(true);
 
-        this.cameras.main.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        this.cameras.main.setBounds(0, 0, map.widthInPixels + 100, map.heightInPixels + 100);
+	this.cameras.main.setSize(500, 500);
+	this.cameras.main.startFollow(this.player);
     }
 
     update() {
         this.player.setVelocity(0);
-        if (this.pointer.isDown) {
-            this.player.setX(this.pointer.x);
-            this.player.setY(this.pointer.y);
-        }
+        this.input.on('pointerdown', (pointer) => {
+            let pointOffset = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+	    this.player.setX(pointOffset.x);
+            this.player.setY(pointOffset.y);
+  	});
         if (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown) {
             if (this.cursors.down.isDown) {
                 this.player.setVelocityY(100);
@@ -183,8 +186,8 @@ class DungeonScene extends BaseScene {
 var config = {
     type: Phaser.AUTO,
     pixelArt: true,
-    width: 1000,
-    height: 1000,
+    width: 500,
+    height: 500,
     zoom: 2,
     autoCenter: Phaser.Scale.CENTER_BOTH,
     physics: {
