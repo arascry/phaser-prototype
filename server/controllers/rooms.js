@@ -2,10 +2,12 @@ const path = require('path');
 const fs = require('fs');
 const Room = require('../room').Room;
 module.exports = {
-    getRoom
+    getRoom,
+    getPlayers
 }
 
 const activeRooms = [];
+
 function getRoom(req, res) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
@@ -23,4 +25,14 @@ function getRoom(req, res) {
             }
         }
     });
+}
+
+function getPlayers(req, res) {
+    const roomCheck = activeRooms.find(({ name }) => name === req.params.roomID);
+    console.log(roomCheck.room.players);
+    if (roomCheck) {
+        res.json(roomCheck.room.getPlayers());
+    } else {
+        res.status(400).json('Something went wrong');
+    }
 }

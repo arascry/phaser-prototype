@@ -18,7 +18,7 @@ class BaseScene extends Phaser.Scene {
     preload() {
         this.load.setCORS('anonymous');
         this.load.image('tiles', 'static/img/dungeonWalls.png');
-        this.load.tilemapTiledJSON(`map-${this.num}`, `http://localhost:8087/phaser/game/rooms/map-${this.num}`);
+        this.load.tilemapTiledJSON(`map-${this.num}`, `http://localhost:8087/phaser/game/rooms/DungeonScene-${this.num}`);
         this.load.spritesheet('base', 'static/img/base.png', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('wallset', 'static/img/dungeonWalls.png', { frameWidth: 16, frameHeight: 16 });
@@ -93,7 +93,7 @@ class BaseScene extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, map.widthInPixels + 100, map.heightInPixels + 100);
         this.cameras.main.startFollow(this.player, false, .5, .5);
 
-        socket.emit('enter', { roomID: this.sys.config, x: this.player.x, y: this.player.y });
+        socket.emit('register', { roomID: this.sys.config, x: this.player.x, y: this.player.y });
 
         socket.on('sendPlayers', playerList => {
             for (const [playerID, playerInfo] of Object.entries(playerList)) {
@@ -210,7 +210,7 @@ class DungeonScene extends BaseScene {
 
     preload() {
         this.load.image('tiles', 'static/img/dungeonWalls.png');
-        this.load.tilemapTiledJSON(`map-${this.num}`, `http://localhost:8087/phaser/game/rooms/map-${this.num}`);
+        this.load.tilemapTiledJSON(`map-${this.num}`, `http://localhost:8087/phaser/game/rooms/DungeonScene-${this.num}`);
         this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('wallset', 'static/img/dungeonWalls.png', { frameWidth: 16, frameHeight: 16 });
     }
