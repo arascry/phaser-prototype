@@ -42,8 +42,13 @@
                  "gid":131,
                  "height":16,
                  "id":1,
-                 "name":"door_0",
+                 "name":"door_0a",
                  "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_1a"
+                        }, 
                         {
                          "name":"link",
                          "type":"int",
@@ -65,8 +70,13 @@
                  "gid":131,
                  "height":16,
                  "id":2,
-                 "name":"door_2",
+                 "name":"door_2a",
                  "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_1a"
+                        }, 
                         {
                          "name":"link",
                          "type":"int",
@@ -83,15 +93,54 @@
                  "width":16,
                  "x":384.333333333333,
                  "y":255.666666666667
+                }, 
+                {
+                 "gid":131,
+                 "height":16,
+                 "id":3,
+                 "name":"door_0b",
+                 "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_1b"
+                        }, 
+                        {
+                         "name":"link",
+                         "type":"int",
+                         "value":0
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"130",
+                 "visible":true,
+                 "width":16,
+                 "x":290.5,
+                 "y":104
                 }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"npcs",
+         "objects":[],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":3,
+ "nextlayerid":6,
+ "nextobjectid":4,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
@@ -100,7 +149,7 @@
         {
          "columns":16,
          "firstgid":1,
-         "image":"dungeonWalls.png",
+         "image":"..\/img\/dungeonWalls.png",
          "imageheight":256,
          "imagewidth":256,
          "margin":0,
@@ -138,7 +187,7 @@
         {
          "columns":16,
          "firstgid":257,
-         "image":"dungeonTileSet.png",
+         "image":"..\/img\/dungeonTileSet.png",
          "imageheight":256,
          "imagewidth":256,
          "margin":0,

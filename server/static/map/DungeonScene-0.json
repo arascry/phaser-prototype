@@ -30,8 +30,13 @@
                  "gid":131,
                  "height":16,
                  "id":1,
-                 "name":"door_1",
+                 "name":"door_1a",
                  "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_0a"
+                        }, 
                         {
                          "name":"link",
                          "type":"int",
@@ -53,8 +58,13 @@
                  "gid":131,
                  "height":16,
                  "id":2,
-                 "name":"door_2",
+                 "name":"door_2a",
                  "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_0a"
+                        }, 
                         {
                          "name":"link",
                          "type":"int",
@@ -71,6 +81,93 @@
                  "width":16,
                  "x":509.5,
                  "y":261.5
+                }, 
+                {
+                 "gid":131,
+                 "height":16,
+                 "id":3,
+                 "name":"door_1b",
+                 "properties":[
+                        {
+                         "name":"exitDoor",
+                         "type":"string",
+                         "value":"door_0b"
+                        }, 
+                        {
+                         "name":"link",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"teleports",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"130",
+                 "visible":true,
+                 "width":16,
+                 "x":545,
+                 "y":142.5
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":5,
+         "name":"npcs",
+         "objects":[
+                {
+                 "gid":420,
+                 "height":16,
+                 "id":4,
+                 "name":"Bill",
+                 "rotation":0,
+                 "type":"163",
+                 "visible":true,
+                 "width":16,
+                 "x":346,
+                 "y":300.5
+                }, 
+                {
+                 "gid":438,
+                 "height":16,
+                 "id":5,
+                 "name":"Sally",
+                 "rotation":0,
+                 "type":"181",
+                 "visible":true,
+                 "width":16,
+                 "x":345.5,
+                 "y":233.5
+                }, 
+                {
+                 "gid":421,
+                 "height":16,
+                 "id":6,
+                 "name":"Sam",
+                 "rotation":0,
+                 "type":"164",
+                 "visible":true,
+                 "width":16,
+                 "x":428,
+                 "y":172.5
+                }, 
+                {
+                 "gid":452,
+                 "height":16,
+                 "id":7,
+                 "name":"Tina",
+                 "rotation":0,
+                 "type":"195",
+                 "visible":true,
+                 "width":16,
+                 "x":448.5,
+                 "y":305
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -90,8 +187,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
- "nextobjectid":3,
+ "nextlayerid":6,
+ "nextobjectid":8,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.4.2",
