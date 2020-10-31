@@ -19,7 +19,6 @@ function getRoom(req, res) {
             } else {
                 const newRoom = new Room(req.params.roomID, JSON.parse(data));
                 activeRooms.push({ name: req.params.roomID, room: newRoom });
-                console.log(newRoom.getNPCS());
                 res.json(newRoom.getTilemapJSON());
             }
         }

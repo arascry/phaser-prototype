@@ -1,12 +1,14 @@
+const socket = io('localhost:8087');
+
 class BaseScene extends Phaser.Scene {
-    constructor(name = 'BaseScene') {
+    constructor(name = 'DungeonScene-0') {
         super(name);
-        this.socket;
         this.cursor;
         this.num = 0;
         this.npcs;
         this.npcsLayer;
         this.player;
+        this.players = {};
         this.prevFrame;
         this.pointer;
         this.portals;
@@ -23,7 +25,6 @@ class BaseScene extends Phaser.Scene {
     }
 
     create() {
-        this.socket = io('localhost:8087');
         let map = this.add.tilemap(`map-${this.num}`);
         this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels, true, true, true, true);
 
@@ -43,14 +44,13 @@ class BaseScene extends Phaser.Scene {
             obj.teleports = object.properties[2].value;
         });
 
-        this.npcs = this.physics.add.group()
+        this.npcs = this.physics.add.staticGroup();
         this.npcsLayer = map.getObjectLayer('npcs')['objects'];
         this.npcsLayer.forEach(object => {
             let obj = this.npcs.create(object.x, object.y, 'megaset', object.type);
-            obj.setBounce(1, 1);
-            obj.setCollideWorldBounds(true);
         });
 
+        this.players = this.physics.add.staticGroup();
         this.player = this.physics.add.sprite(400, 300, 'base');
 
         this.anims.create({
@@ -82,10 +82,8 @@ class BaseScene extends Phaser.Scene {
         });
 
         this.physics.add.overlap(this.player, this.portals, null, this.moveRooms, this);
-        this.physics.add.overlap(this.npcs, this.portals, null, this.moveRooms, this);
-        console.log(this.npcs);
         this.physics.add.collider(this.player, walls, null, null, this);
-        this.physics.add.collider(this.player, this.npcs, null, null, this);
+        this.physics.add.collider(this.player, this.npcs, null, this.sendCollision, this);
         this.physics.add.collider(this.npcs, walls, null, null, this);
         this.physics.add.collider(this.npcs, this.npcs, null, null, this);
 
@@ -94,6 +92,44 @@ class BaseScene extends Phaser.Scene {
 
         this.cameras.main.setBounds(0, 0, map.widthInPixels + 100, map.heightInPixels + 100);
         this.cameras.main.startFollow(this.player, false, .5, .5);
+
+        socket.emit('enter', { roomID: this.sys.config, x: this.player.x, y: this.player.y });
+
+        socket.on('sendPlayers', playerList => {
+            for (const [playerID, playerInfo] of Object.entries(playerList)) {
+                this.addPlayer({ playerID, playerInfo });
+            }
+        });
+
+        socket.on('exit', playerID => {
+            this.removePlayer(playerID);
+        });
+
+        socket.on('enter', (payload) => {
+            this.addPlayer(payload);
+        });
+
+        socket.on('position', ({ playerID, position }) => {
+            this.updatePlayers(playerID, position);
+        });
+    }
+
+    addPlayer({ playerID, playerInfo }) {
+        let obj = this.players.create(playerInfo.x, playerInfo.y, 'base');
+        obj.name = playerID;
+    }
+
+    updatePlayers(playerID, position) {
+        const player = this.players.getChildren().find(el => el.name === playerID);
+        if (player) {
+            player.x = position.x;
+            player.y = position.y;
+        }
+    }
+
+    removePlayer({ playerID }) {
+        const player = this.players.getChildren().find(el => el.name === playerID);
+        player.destroy();
     }
 
     update() {
@@ -146,10 +182,10 @@ class BaseScene extends Phaser.Scene {
                 case 28: this.player.play('right', true);
                     break;
             }
+            socket.emit('position', { roomID: this.sys.config, x: this.player.x, y: this.player.y });
         } else {
             this.player.setFrame(this.prevFrame);
         }
-
     }
 
     moveRooms(player, portal) {
@@ -157,6 +193,9 @@ class BaseScene extends Phaser.Scene {
             if (this.scene.getIndex(`DungeonScene-${portal.link}`) === -1) {
                 this.scene.add(`DungeonScene-${portal.link}`, new DungeonScene(portal.link), false);
             } else {
+                socket.emit('exit', { roomID: this.sys.config });
+                socket.removeAllListeners();
+                console.log(socket.listeners());
                 this.scene.start(`DungeonScene-${portal.link}`);
             }
         }
