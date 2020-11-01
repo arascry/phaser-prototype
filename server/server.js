@@ -15,7 +15,7 @@ const server = app.listen(port, () => {
 
 const io = require('socket.io').listen(server);
 
-
+console.log(io);
 
 io.sockets.on('connection', (socket) => {
     console.log(`User with ID:${socket.id} connected`);
