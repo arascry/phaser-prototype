@@ -29,7 +29,6 @@ function getRoom(req, res) {
 
 function getPlayers(req, res) {
     const roomCheck = activeRooms.find(({ name }) => name === req.params.roomID);
-    console.log(roomCheck.room.players);
     if (roomCheck) {
         res.json(roomCheck.room.getPlayers());
     } else {

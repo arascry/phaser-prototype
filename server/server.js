@@ -5,17 +5,24 @@ const fetch = require('node-fetch');
 const roomsRouter = require('./routes/api/rooms');
 
 const app = express();
+const http = require('http').Server(app);
 
 app.set('view engine', 'ejs');
-app.use('/phaser/game/rooms', roomsRouter);
+app.use('/backend/rooms', roomsRouter);
+app.get('/backend/test', (req, res) => {
+	console.log(req.socket.address());	
+});
+app.get('/backend', (req, res) => {
+	console.log('default route');
+});
 
-const server = app.listen(port, () => {
+const server = app.listen({host: 'localhost', port, exclusive: true}, () => {
     console.log(`Listening on port:${port}`);
 });
 
-const io = require('socket.io').listen(server);
-
-
+const io = require('socket.io').listen(server, {
+        path: '/backend/socket.io'
+});
 
 io.sockets.on('connection', (socket) => {
     console.log(`User with ID:${socket.id} connected`);
@@ -28,7 +35,7 @@ io.sockets.on('connection', (socket) => {
 
     socket.on('register', ({ roomID, x, y }) => {
         socket.join(roomID, (err) => {
-            fetch(`http://localhost:8087/phaser/game/rooms/${roomID}/players`)
+            fetch(`https://arascry.dev/phaser/game/rooms/${roomID}/players`)
                 .then(res => res.json())
                 .then(players => {
                     socket.emit('sendPlayers', players);
