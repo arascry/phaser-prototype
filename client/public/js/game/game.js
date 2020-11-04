@@ -200,7 +200,6 @@ class BaseScene extends Phaser.Scene {
             } else {
                 socket.emit('exit', { roomID: this.sys.config });
                 socket.removeAllListeners();
-                console.log(socket.listeners());
                 this.scene.start(`DungeonScene-${portal.link}`);
             }
         }

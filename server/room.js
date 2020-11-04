@@ -13,7 +13,7 @@ class Room {
     }
 
     initSocket(name) {
-        const socket = io('http://localhost:8087');
+        const socket = io('http://localhost:8087', { path: '/phaser/game/socket.io' });
         socket.emit('listen', { roomID: name });
         socket.on('enter', (player) => {
             this.addPlayer(player);
@@ -44,7 +44,7 @@ class Room {
     }
 
     removePlayer({ playerID }) {
-        this.players = { ...delete this.players[playerID] };
+        delete this.players[playerID];
     }
 
     getPlayers() {
