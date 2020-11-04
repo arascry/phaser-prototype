@@ -1,4 +1,6 @@
-const socket = io('localhost:8087');
+const socket = io('http://localhost:8087', {
+    path: '/phaser/game/socket.io'
+});
 
 class BaseScene extends Phaser.Scene {
     constructor(name = 'DungeonScene-0') {
@@ -19,7 +21,7 @@ class BaseScene extends Phaser.Scene {
         this.load.setCORS('anonymous');
         this.load.image('tiles', 'static/img/dungeonWalls.png');
         this.load.tilemapTiledJSON(`map-${this.num}`, `http://localhost:8087/phaser/game/rooms/DungeonScene-${this.num}`);
-        this.load.spritesheet('base', 'static/img/base.png', { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet('base', 'http://localhost:8087/phaser/game/players/baseMale', { frameWidth: 32, frameHeight: 32 });
         this.load.spritesheet('megaset', 'static/img/dungeonTileSet.png', { frameWidth: 16, frameHeight: 16 });
         this.load.spritesheet('wallset', 'static/img/dungeonWalls.png', { frameWidth: 16, frameHeight: 16 });
     }
@@ -54,28 +56,28 @@ class BaseScene extends Phaser.Scene {
         this.player = this.physics.add.sprite(400, 300, 'base');
 
         this.anims.create({
-            key: 'left',
-            frames: this.anims.generateFrameNumbers('base', { frames: [20, 21, 22, 23] }),
-            frameRate: 6,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'right',
-            frames: this.anims.generateFrameNumbers('base', { frames: [28, 29, 30, 31] }),
-            frameRate: 6,
-            repeat: -1
-        });
-
-        this.anims.create({
             key: 'up',
-            frames: this.anims.generateFrameNumbers('base', { frames: [4, 5, 6, 7] }),
+            frames: this.anims.generateFrameNumbers('base', { frames: [0, 1, 2, 3] }),
             frameRate: 6,
             repeat: -1
         });
 
         this.anims.create({
             key: 'down',
+            frames: this.anims.generateFrameNumbers('base', { frames: [4, 5, 6, 7] }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'left',
+            frames: this.anims.generateFrameNumbers('base', { frames: [8, 9, 10, 11] }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'right',
             frames: this.anims.generateFrameNumbers('base', { frames: [12, 13, 14, 15] }),
             frameRate: 6,
             repeat: -1
@@ -109,8 +111,8 @@ class BaseScene extends Phaser.Scene {
             this.addPlayer(payload);
         });
 
-        socket.on('position', ({ playerID, position }) => {
-            this.updatePlayers(playerID, position);
+        socket.on('position', ({ playerID, position, frame }) => {
+            this.updatePlayers(playerID, position, frame);
         });
     }
 
@@ -119,11 +121,12 @@ class BaseScene extends Phaser.Scene {
         obj.name = playerID;
     }
 
-    updatePlayers(playerID, position) {
+    updatePlayers(playerID, position, frame) {
         const player = this.players.getChildren().find(el => el.name === playerID);
         if (player) {
             player.x = position.x;
             player.y = position.y;
+            player.setFrame(frame);
         }
     }
 
@@ -141,50 +144,52 @@ class BaseScene extends Phaser.Scene {
         });
 
         if (this.cursors.left.isDown || this.cursors.right.isDown || this.cursors.up.isDown || this.cursors.down.isDown) {
-            if (this.cursors.down.isDown) {
-                this.player.setVelocityY(100);
-                this.prevFrame = 12;
-                if (this.cursors.shift.isDown) {
-                    this.player.setVelocityY(160);
-                }
-            }
-
             if (this.cursors.up.isDown) {
                 this.player.setVelocityY(-100);
-                this.prevFrame = 4;
+                this.prevFrame = 0;
                 if (this.cursors.shift.isDown) {
                     this.player.setVelocityY(-160);
                 }
             }
 
-            if (this.cursors.right.isDown) {
-                this.player.setVelocityX(100);
-                this.prevFrame = 28;
+            if (this.cursors.down.isDown) {
+                this.player.setVelocityY(100);
+                this.prevFrame = 4;
                 if (this.cursors.shift.isDown) {
-                    this.player.setVelocityX(160);
+                    this.player.setVelocityY(160);
                 }
             }
 
             if (this.cursors.left.isDown) {
                 this.player.setVelocityX(-100);
-                this.prevFrame = 20;
+                this.prevFrame = 8;
                 if (this.cursors.shift.isDown) {
                     this.player.setVelocityX(-160);
                 }
             }
+
+            if (this.cursors.right.isDown) {
+                this.player.setVelocityX(100);
+                this.prevFrame = 12;
+                if (this.cursors.shift.isDown) {
+                    this.player.setVelocityX(160);
+                }
+            }
+
             switch (this.prevFrame) {
-                case 4: this.player.play('up', true);
+                case 0: this.player.play('up', true);
                     break;
-                case 12: this.player.play('down', true);
+                case 4: this.player.play('down', true);
                     break;
-                case 20: this.player.play('left', true);
+                case 8: this.player.play('left', true);
                     break;
-                case 28: this.player.play('right', true);
+                case 12: this.player.play('right', true);
                     break;
             }
-            socket.emit('position', { roomID: this.sys.config, x: this.player.x, y: this.player.y });
+            socket.emit('position', { roomID: this.sys.config, x: this.player.x, y: this.player.y, frame: this.player.frame.name });
         } else {
             this.player.setFrame(this.prevFrame);
+            socket.emit('position', { roomID: this.sys.config, x: this.player.x, y: this.player.y, frame: this.player.frame.name });
         }
     }
 

@@ -12,8 +12,8 @@ const app = express();
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 
-app.use('/phaser', indexRouter);
 app.use('/phaser/static', express.static(path.join(__dirname, 'public')));
+app.use('/phaser', indexRouter);
 
 app.listen(port, () => {
     console.log(`Listening on port:${port}`);
