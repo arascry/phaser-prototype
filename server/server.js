@@ -3,19 +3,24 @@ const express = require('express');
 const port = '8087';
 const fetch = require('node-fetch');
 const roomsRouter = require('./routes/api/rooms');
+const playersRouter = require('./routes/api/players');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use('/phaser/game/rooms', roomsRouter);
+app.use('/phaser/game/players', playersRouter);
+app.get('/phaser/game/test', (req, res) => {
+    console.log(req.socket.address());
+});
 
-const server = app.listen(port, () => {
+const server = app.listen({ host: 'localhost', port, exclusive: true }, () => {
     console.log(`Listening on port:${port}`);
 });
 
-const io = require('socket.io').listen(server);
-
-console.log(io);
+const io = require('socket.io').listen(server, {
+    path: '/phaser/game/socket.io'
+});
 
 io.sockets.on('connection', (socket) => {
     console.log(`User with ID:${socket.id} connected`);
@@ -43,9 +48,9 @@ io.sockets.on('connection', (socket) => {
         socket.leave(rooms[1]);
     });
 
-    socket.on('position', ({ roomID, x, y }) => {
+    socket.on('position', ({ roomID, x, y, frame }) => {
         let rooms = Object.keys(socket.rooms);
-        socket.to(rooms[1]).emit('position', { playerID: socket.id, position: { x, y } });
+        socket.to(rooms[1]).emit('position', { playerID: socket.id, position: { x, y }, frame });
     });
 
     socket.on('disconnecting', () => {
